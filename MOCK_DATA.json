@@ -1,11 +1,5 @@
 [
   {
-    "id": 1,
-    "name": "John Smith",
-    "jobTitle": "Software Engineer",
-    "country": "USA"
-  },
-  {
     "id": 2,
     "name": "Emma Johnson",
     "jobTitle": "Product Manager",
@@ -125,5 +119,10 @@
     "country": "India",
     "id": 21
   },
-  { "name": "Aditya", "jobTitle": "Software Dev", "country": "India", "id": 22 }
+  {
+    "name": "Aditya",
+    "jobTitle": "Software Dev",
+    "country": "India",
+    "id": 22
+  }
 ]
