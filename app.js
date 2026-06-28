@@ -1,27 +1,28 @@
 const express = require('express')
-const app = express()
-const users = require('./MOCK_DATA.json')
+const app = express();
+const data = require('./MOCK_DATA.json')
 const fs = require('fs')
-
 app.use(express.json())
 app.use(express.urlencoded({extended : false}))
 
+// get all the users
 app.get('/api/users', (req, res)=>{
-    return res.json(users)
+    return res.json(users);
 })
 
+//post request
 app.post('/api/users', (req, res)=>{
     const body = req.body;
     const newUser = {
-        ...body,
-        id : users.length + 1
+       ...body,
+       id : users.length + 1
     }
-    users.push(newUser)
+    return res.json(newUser);
 
     fs.writeFile('./MOCK_DATA.json', JSON.stringify(users, null, 2), (err)=>{
         if(err){
             return res.status(500).json({
-                status : 'error',
+                  status : 'error',
             })
         }
         return res.json({
@@ -30,6 +31,7 @@ app.post('/api/users', (req, res)=>{
         })
     })
 })
+// getting the informations of a specific user
 app.route('/api/users/:id')
 .get((req, res)=>{
     const id = Number(req.params.id);
@@ -43,35 +45,35 @@ app.route('/api/users/:id')
     return res.json(user);
 })
 .put((req, res)=>{
-     const id = Number(req.params.id)
-     const userIndex = users.findIndex((user)=> user.id === id)
-     if(userIndex === -1){
+    const id = Number(req.params.id);
+    const userIndex = users.findIndex((user) => user.id === id)
+    if(userIndex == -1){
         return res.status(404).json({
             status : 'error',
-            message : 'not found'
+            message : 'user does not even exist'
         })
-     }
-     users[userIndex] = {
-        ...users[userIndex],
-        ...req.body
-     }
+    }
+   users[userIndex] = {
+    ...users[userIndex],
+    ...req.body
+   }
 
     fs.writeFile('./MOCK_DATA.json', JSON.stringify(users, null, 2), (err)=>{
         if(err){
             return res.status(500).json({
                 status : 'error',
-                message : 'failed to update the user'
+                messsage : 'unable to update the users'
             })
         }
         return res.json({
-            status : true,
+            status : 'success',
             user : users[userIndex]
         })
     })
 })
 .delete((req, res)=>{
     const id = Number(req.params.id);
-    const userIndex = users.findIndex((user)=> user.id === id)
+    const userIndex = users.findIndex((user)=> user.id === id);
     if(userIndex === -1){
         return res.status(404).json({
             status : 'error',
@@ -79,23 +81,23 @@ app.route('/api/users/:id')
         })
     }
     const deletedUser = users[userIndex]
-    users.splice(userIndex, 1)
-    
-     fs.writeFile('./MOCK_DATA.json', JSON.stringify(users, null, 2), (err)=>{
+    users.splice(deletedUser, 1);
+
+    fs.writeFile('./MOCK_DATA.json', (users, null, 2), (err)=>{
         if(err){
-            return res.status(500).json({
+            return res.staus(500).json({
                 status : 'error',
-                message : 'failed to delete the user'
+                message : 'cannot delete the user'
             })
         }
         return res.json({
-            status : true,
+            status : 'success',
+            message : 'user deleted successfully',
             deletedUser
         })
     })
-    
 })
-const port = 8000
-app.listen(port, () => {
-    console.log(`Server is listening on the port ${port}...`);
-});
+const port = 3000
+app.listen(port, ()=>{
+    console.log(`Server is listening on the port ${port}...`)
+})
